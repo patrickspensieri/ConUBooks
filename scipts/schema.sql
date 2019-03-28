@@ -8,7 +8,7 @@
 SET FOREIGN_KEY_CHECKS = 0;
 drop table if exists customerOrder_book;
 drop table if exists author_book;
-drop table if exists publisher_book;
+drop table if exists book_publisher;
 drop table if exists publisherOrder_book;
 drop table if exists sale_book;
 drop table if exists branch;
@@ -35,7 +35,6 @@ create table employee(
 
 create table customer(
     customerID integer auto_increment primary key,
-    year integer(4) not null,
     name varchar(50) not null,
     phone varchar(11),
     address varchar(100) not null,
@@ -50,7 +49,6 @@ create table author(
     email varchar(100)
 );
 
--- TODO add quantity
 create table book(
     isbn char(13) primary key,
     title varchar(100) not null,
@@ -60,7 +58,6 @@ create table book(
     quantity smallint not null
 );
 
--- assuming we control the publisherID
 create table publisher(
     publisherID integer auto_increment primary key,
     name varchar(50) not null,
@@ -69,7 +66,6 @@ create table publisher(
     email varchar(100)
 );
 
--- assuming the publisher controls the branchID
 create table branch(
     branchID integer not null,
     publisherID integer not null,
@@ -86,6 +82,7 @@ create table publisherOrder(
     employeeID integer not null,
     publisherID integer not null,
     datePlaced datetime default current_timestamp() not null,
+    dateDue datetime not null,
     dateReceived datetime,
     foreign key (employeeID) references employee(employeeID),
     foreign key (publisherID) references publisher(publisherID)
@@ -93,8 +90,7 @@ create table publisherOrder(
 
 create table publisherShipment(
     publisherOrderID integer primary key,
-    dateShipped datetime,
-    dateReceived datetime,
+    trackingNumber varchar(50),
     foreign key (publisherOrderID) references publisherOrder(publisherOrderID)
 );
 
@@ -106,12 +102,11 @@ create table author_book(
     foreign key (isbn) references book(isbn)
 );
 
-create table publisher_book(
+create table book_publisher(
+    isbn char(13) primary key,
     publisherID integer not null,
-    isbn char(13) not null,
-    primary key (publisherID, isbn),
-    foreign key (publisherID) references publisher(publisherID),
-    foreign key (isbn) references book(isbn)
+    foreign key (isbn) references book(isbn),
+    foreign key (publisherID) references publisher(publisherID)
 );
 
 create table publisherOrder_book(
@@ -128,6 +123,7 @@ create table sale(
     salePrice decimal(19,4) not null,
     customerID integer not null,
     employeeID integer not null,
+    date datetime not null,
     foreign key (customerID) references customer(customerID),
     foreign key (employeeID) references employee(employeeID)
 );
@@ -153,8 +149,7 @@ create table customerOrder(
 
 create table customerShipment(
     customerOrderID integer primary key,
-    dateShipped datetime,
-    dateReceived datetime,
+    trackingNumber varchar(50),
     foreign key (customerOrderID) references customerOrder(customerOrderID)
 );
 
