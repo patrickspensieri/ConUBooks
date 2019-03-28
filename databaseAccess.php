@@ -107,7 +107,7 @@ function getAllPurchases()
 }
 
 # g. List every book ordered but not received within the period set has passed.
-function getAllBooks()
+function getAllBookOrderedNotReceived()
 {
     $connection = conn();
     $results    = $connection->query("select b.title, pb.isbn, pb.quantity, p.dateDue, p.dateReceived from publisherOrder p inner join publisherOrder_book pb on p.publisherOrderID pb.publisherOrderID inner join book b on pb.isbn = b.isbn where p.dateReceived > p.dateDue or (p.dateReceived is null and current_timestamp() > p.dateDue);");
