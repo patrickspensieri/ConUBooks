@@ -12,7 +12,7 @@ inner join customerOrder_book cb on cb.customerOrderID = c.customerOrderID
 inner join book b on cb.isbn = b.isbn
 where c.customerID = 2;
 -- d. Get detail of all purchases made by a given customer.
-select s.*, sb.isbn, sb.quantity, b.title
+select s.*, sb.isbn, sb.quantity, sb.pricePerBook, b.title
 from sale s
 inner join sale_book sb on sb.saleID = s.saleID
 inner join book b on sb.isbn = b.isbn
@@ -24,7 +24,7 @@ inner join sale_book sb on sb.saleID = s.saleID
 inner join book b on sb.isbn = b.isbn
 where s.employeeID = 2 and s.date between '2019-03-31' and '2019-03-31 23:59:59';
 -- f. Get details of all purchases made. For each customer, return the total amount paid for the books ordered since the beginning of the year.
-select s1.*, sum(s2.salePrice) as 'total customer sales in 2019'
+select s1.*, sum(s2.totalPrice) as 'total customer sales in 2019'
 from sale s1
 inner join sale s2 on s1.customerID = s2.customerID
 where s1.date between '2019-01-01' and '2019-12-31'

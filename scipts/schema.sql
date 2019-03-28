@@ -1,10 +1,4 @@
 -- disable foreign key checks to delete tables in any order
--- create database if not exists conubooks;
--- use database conubooks;
-
--- TODO
--- - which data type to use for year?
-
 SET FOREIGN_KEY_CHECKS = 0;
 drop table if exists customerOrder_book;
 drop table if exists author_book;
@@ -53,7 +47,6 @@ create table book(
     isbn char(13) primary key,
     title varchar(100) not null,
     price decimal(19,4) not null,
-    year smallint not null,
     edition smallint not null,
     quantity smallint not null
 );
@@ -73,6 +66,7 @@ create table branch(
     phone varchar(11),
     address varchar(100) not null,
     email varchar(100),
+    branchManager varchar(50) not null,
     primary key (branchID, publisherID),
     foreign key (publisherID) references publisher(publisherID)
 );
@@ -120,7 +114,7 @@ create table publisherOrder_book(
 
 create table sale(
     saleID integer auto_increment primary key,
-    salePrice decimal(19,4) not null,
+    totalPrice decimal(19,4) not null,
     customerID integer not null,
     employeeID integer not null,
     date datetime not null,
@@ -132,6 +126,7 @@ create table sale_book(
     saleID integer not null,
     isbn char(13) not null,
     quantity smallint default 1 not null,
+    pricePerBook decimal(19,4) not null,
     primary key (saleID, isbn),
     foreign key (saleID) references sale(saleID),
     foreign key (isbn) references book(isbn)
