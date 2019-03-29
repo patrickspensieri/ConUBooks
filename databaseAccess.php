@@ -19,7 +19,7 @@ function conn()
 #    
 # Custom queries
 #
-function customeQuery($str)
+function customQuery($str)
 {
     $connection = conn();
     try {
@@ -49,7 +49,7 @@ function getAllBooks()
 function getAllBooksBackOrdered()
 {
     $connection = conn();
-    $results    = $connection->query("from publisherOrder p1 join publisherOrder_book p2 join book b where dateReceived is null and p1.publisherOrderId = p2.publisherOrderID and b.isbn = p2.isbn;");
+    $results    = $connection->query("select b.* from publisherOrder p1 join publisherOrder_book p2 join book b where dateReceived is null and p1.publisherOrderId = p2.publisherOrderID and b.isbn = p2.isbn;");
     $connection = null;
     return $results;
 }
@@ -107,10 +107,15 @@ function getAllPurchases()
 }
 
 # g. List every book ordered but not received within the period set has passed.
-function getAllBookOrderedNotReceived()
+function getAllBooksNotReceived()
 {
     $connection = conn();
-    $results    = $connection->query("select b.title, pb.isbn, pb.quantity, p.dateDue, p.dateReceived from publisherOrder p inner join publisherOrder_book pb on p.publisherOrderID pb.publisherOrderID inner join book b on pb.isbn = b.isbn where p.dateReceived > p.dateDue or (p.dateReceived is null and current_timestamp() > p.dateDue);");
+    $results    = $connection->query("select b.title, pb.isbn, pb.quantity, p.dateDue, p.dateReceived
+from publisherOrder p
+inner join publisherOrder_book pb on p.publisherOrderID = pb.publisherOrderID
+inner join book b on pb.isbn = b.isbn
+where p.dateReceived > p.dateDue
+or (p.dateReceived is null and current_timestamp() > p.dateDue);");
     $connection = null;
     return $results;
 }
