@@ -8,7 +8,7 @@ function conn()
     try {
         $connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "Connected successfully <br/>";
+        // echo "Connected successfully <br/>";
     }
     catch (PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
@@ -25,8 +25,32 @@ function customQuery($str)
     try {
         $results = $connection->query("$str");
     }
-    catch (Exception $e) {
-        echo "Malformed query ($str)";
+    catch (Exception $exception) {
+        echo "Malformed query: '$str'";
+        echo $exception->getMessage();
+    }
+    $connection = null;
+    return $results;
+}
+
+#
+# Custom transactions
+#
+function customTransaction($str)
+{
+    $connection = conn();
+    try
+    {
+        $connection->beginTransaction();
+        $results = $connection->exec("$str");
+        $connection->commit();
+        echo "Success";      
+    } 
+    catch(Exception $exception)
+    {
+        echo "Malformed transaction: '$str'";
+        echo $exception->getMessage();
+        $connection->rollBack();
     }
     $connection = null;
     return $results;
@@ -111,11 +135,11 @@ function getAllBooksNotReceived()
 {
     $connection = conn();
     $results    = $connection->query("select b.title, pb.isbn, pb.quantity, p.dateDue, p.dateReceived
-from publisherOrder p
-inner join publisherOrder_book pb on p.publisherOrderID = pb.publisherOrderID
-inner join book b on pb.isbn = b.isbn
-where p.dateReceived > p.dateDue
-or (p.dateReceived is null and current_timestamp() > p.dateDue);");
+        from publisherOrder p
+        inner join publisherOrder_book pb on p.publisherOrderID = pb.publisherOrderID
+        inner join book b on pb.isbn = b.isbn
+        where p.dateReceived > p.dateDue
+        or (p.dateReceived is null and current_timestamp() > p.dateDue);");
     $connection = null;
     return $results;
 }
