@@ -28,11 +28,12 @@ The following assumptions were made
 ```
 employee(employeeID, ssn, name, phone, address, email)
     employeeID -> ssn, name, phone, address, email
+    ssn -> employeeID, name, phone, address, email
 
 customer(customerID, name, phone, address, email)
     customerID -> name, phone, address, email
 
-author(authorID, name, phone, address, email)
+author(authorID, name)
     authorID -> name, phone, address, email
 
 book(isbn, title, price, edition, quantity)
