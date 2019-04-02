@@ -3,6 +3,7 @@
 #### Monday, April 8th 2019
 
 spc353_4@encs.concordia.ca
+
 | Name                  | ID        |
 |---                    |---        |
 | Andre Marques Manata  | 27148224  |
@@ -103,7 +104,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 create table employee(
     employeeID integer auto_increment primary key,
-    ssn integer(9) not null,
+    ssn integer(9) unique not null,
     name varchar(50) not null,
     phone varchar(11) not null,
     address varchar(100) not null,
