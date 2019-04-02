@@ -8,7 +8,7 @@ function conn()
     try {
         $connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "Connected successfully <br/>";
+        // echo "Connected successfully <br/>";
     }
     catch (PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
@@ -19,14 +19,38 @@ function conn()
 #    
 # Custom queries
 #
-function customeQuery($str)
+function customQuery($str)
 {
     $connection = conn();
     try {
         $results = $connection->query("$str");
     }
-    catch (Exception $e) {
-        echo "Malformed query ($str)";
+    catch (Exception $exception) {
+        echo "Malformed query: '$str'";
+        echo $exception->getMessage();
+    }
+    $connection = null;
+    return $results;
+}
+
+#
+# Custom transactions
+#
+function customTransaction($str)
+{
+    $connection = conn();
+    try
+    {
+        $connection->beginTransaction();
+        $results = $connection->exec("$str");
+        $connection->commit();
+        echo "Success";      
+    } 
+    catch(Exception $exception)
+    {
+        echo "Malformed transaction: '$str'";
+        echo $exception->getMessage();
+        $connection->rollBack();
     }
     $connection = null;
     return $results;
@@ -49,7 +73,7 @@ function getAllBooks()
 function getAllBooksBackOrdered()
 {
     $connection = conn();
-    $results    = $connection->query("from publisherOrder p1 join publisherOrder_book p2 join book b where dateReceived is null and p1.publisherOrderId = p2.publisherOrderID and b.isbn = p2.isbn;");
+    $results    = $connection->query("select b.* from publisherOrder p1 join publisherOrder_book p2 join book b where dateReceived is null and p1.publisherOrderId = p2.publisherOrderID and b.isbn = p2.isbn;");
     $connection = null;
     return $results;
 }
@@ -107,10 +131,15 @@ function getAllPurchases()
 }
 
 # g. List every book ordered but not received within the period set has passed.
-function getAllBookOrderedNotReceived()
+function getAllBooksNotReceived()
 {
     $connection = conn();
-    $results    = $connection->query("select b.title, pb.isbn, pb.quantity, p.dateDue, p.dateReceived from publisherOrder p inner join publisherOrder_book pb on p.publisherOrderID pb.publisherOrderID inner join book b on pb.isbn = b.isbn where p.dateReceived > p.dateDue or (p.dateReceived is null and current_timestamp() > p.dateDue);");
+    $results    = $connection->query("select b.title, pb.isbn, pb.quantity, p.dateDue, p.dateReceived
+        from publisherOrder p
+        inner join publisherOrder_book pb on p.publisherOrderID = pb.publisherOrderID
+        inner join book b on pb.isbn = b.isbn
+        where p.dateReceived > p.dateDue
+        or (p.dateReceived is null and current_timestamp() > p.dateDue);");
     $connection = null;
     return $results;
 }
