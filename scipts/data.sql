@@ -5,6 +5,10 @@ insert into employee values (2, 987652431, 'Philippe', '14382222222', '90 Some P
 insert into customer values (1, 'Pablo', '15141111111', '341 Roach Road', 'pablo@yahoo.com');
 insert into customer values (2, 'Patrick', '15142222222', '18 12th Avenue', 'patrick@mail.com');
 -- author
+insert into entity values ();
+insert into entity values ();
+insert into entity values ();
+insert into entity values ();
 insert into author values (1, 'George Orwell', null, null, null);
 insert into author values (2, 'H. G. Wells', null, null, null);
 insert into author values (3, 'Daniela Isac', null, null, null);
@@ -47,5 +51,3 @@ insert into customerOrder values (1, 2, 1, current_timestamp(), null);
 insert into customerShipment values (1, '2349 3340 0942 3334');
 -- customerOrder_book
 insert into customerOrder_book values (1, '9780199660179', 1);
-
-

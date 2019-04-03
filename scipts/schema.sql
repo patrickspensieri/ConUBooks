@@ -1,5 +1,6 @@
 -- disable foreign key checks to delete tables in any order
 SET FOREIGN_KEY_CHECKS = 0;
+-- drop tables
 drop table if exists customerOrder_book;
 drop table if exists author_book;
 drop table if exists book_publisher;
@@ -16,11 +17,30 @@ drop table if exists customer;
 drop table if exists author;
 drop table if exists book;
 drop table if exists publisher;
+drop table if exists address;
+drop table if exists entity;
+-- drop procedures
+drop procedure if exists insertAuthor;
 SET FOREIGN_KEY_CHECKS = 1;
 
+create table entity(
+    entityID integer auto_increment primary key
+);
+
+create table address(
+    entityID integer primary key,
+    civicNumber varchar(50) not null,
+    city varchar(50) not null,
+    province varchar(20) not null,
+    postalCode varchar(6) not null,
+    foreign key (entityID) references entity(entityID)
+);
+
+-- employee using entity and address
+-- TODO make use of address table
 create table employee(
     employeeID integer auto_increment primary key,
-    ssn integer(9) not null,
+    ssn integer(9) unique not null,
     name varchar(50) not null,
     phone varchar(11) not null,
     address varchar(100) not null,
@@ -36,11 +56,12 @@ create table customer(
 );
 
 create table author(
-    authorID integer auto_increment primary key,
+    authorID integer primary key,
     name varchar(50) not null,
     phone varchar(11),
     address varchar(100),
-    email varchar(100)
+    email varchar(100),
+    foreign key (authorID) references entity(entityID)
 );
 
 create table book(
@@ -156,3 +177,63 @@ create table customerOrder_book(
     foreign key (customerOrderID) references customerOrder(customerOrderID),
     foreign key (isbn) references book(isbn)
 );
+
+-- set the delimeter
+DELIMITER //
+-- insertAuthor
+CREATE PROCEDURE insertAuthor(
+    IN name varchar(50),
+    IN phone varchar(11),
+    IN address varchar(100),
+    IN email varchar(100))
+BEGIN
+  INSERT INTO entity VALUES();
+  INSERT INTO author VALUES(LAST_INSERT_ID(), name, phone, address, email);
+END //
+-- insertEmployee
+CREATE PROCEDURE insertEmployee(
+    IN ssn integer(9),
+    IN name varchar(50),
+    IN phone varchar(11),
+    IN address varchar(100),
+    IN email varchar(100))
+BEGIN
+  INSERT INTO entity VALUES();
+  INSERT INTO author VALUES(LAST_INSERT_ID(), ssn, name, phone, address, email);
+END //
+-- insertCustomer
+CREATE PROCEDURE insertCustomer(
+    IN name varchar(50),
+    IN phone varchar(11),
+    IN address varchar(100),
+    IN email varchar(100))
+BEGIN
+  INSERT INTO entity VALUES();
+  INSERT INTO author VALUES(LAST_INSERT_ID(), name, phone, address, email);
+END //
+-- insertPublisher
+CREATE PROCEDURE insertPublisher(
+    IN name varchar(50),
+    IN phone varchar(11),
+    IN address varchar(100),
+    IN email varchar(100))
+BEGIN
+  INSERT INTO entity VALUES();
+  INSERT INTO author VALUES(LAST_INSERT_ID(), name, phone, address, email);
+END //
+-- insertBranch
+CREATE PROCEDURE insertBranch(
+    IN publisherID integer,
+    IN phone varchar(11),
+    IN address varchar(100),
+    IN email varchar(100),
+    IN branchManager varchar(50))
+BEGIN
+  INSERT INTO entity VALUES();
+  INSERT INTO author VALUES(LAST_INSERT_ID(), publisherID, name, phone, address, email, branchManager);
+END //
+
+
+
+-- set delimeter back to ;
+DELIMITER ;
