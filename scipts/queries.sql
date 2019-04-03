@@ -3,8 +3,8 @@ select *
 from book;
 -- b. Get detail of all books that are back order.
 select b.*
-from publisherOrder p1 join publisherOrder_book p2 join book b
-where dateReceived is null and p1.publisherOrderId = p2.publisherOrderID and b.isbn = p2.isbn;
+from publisherOrder p1 join publisherOrder_book p2 join book b join publisherShipment s
+where s.dateReceived is null and p1.publisherOrderId = p2.publisherOrderID and b.isbn = p2.isbn and p1.publisherOrderID = s.publisherOrderID;
 -- c. Get detail of all the special orders for a given customer.
 select c.*, cb.isbn, cb.quantity, b.title
 from customerOrder c
@@ -30,9 +30,10 @@ inner join sale s2 on s1.customerID = s2.customerID
 where s1.date between '2019-01-01' and '2019-12-31'
 and s2.date between '2019-01-01' and '2019-12-31';
 -- g. List every book ordered but not received within the period set has passed.
-select b.title, pb.isbn, pb.quantity, p.dateDue, p.dateReceived
+select b.title, pb.isbn, pb.quantity, p.dateDue
 from publisherOrder p
 inner join publisherOrder_book pb on p.publisherOrderID = pb.publisherOrderID
 inner join book b on pb.isbn = b.isbn
-where p.dateReceived > p.dateDue
-or (p.dateReceived is null and current_timestamp() > p.dateDue);
+inner join publisherShipment s on s.publisherOrderID = p.publisherOrderID
+where s.dateReceived > p.dateDue
+or (s.dateReceived is null and current_timestamp() > p.dateDue);
