@@ -3,7 +3,7 @@
     <head>
         <title>ConUBooks</title>
         <meta charset="utf-8"/>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
     <body>
 	<nav class="navbar navbar-expand-lg bg-primary navbar-dark">
@@ -286,16 +286,16 @@
 									<option value="d">Get detail of all purchases made by a given customer.</option>
 									<option value="e">Get detail of all the sales made by a given employee on a specific date.</option>
 									<option value="f">Get details of all purchases made. For each customer, return the total amount paid for the books ordered since the beginning of the year.</option>
-									<option value="g">List every book ordered but not received within the period set has passed.</option>
+									<option value="g">List every book ordered but not received within the set period.</option>
 								</select>
 							</div>
 							<div class="form-group">
-								<label for='input1'>Argument 1:</label>
-								<input name="input1" id='input1' type="text" class="form-control"/>
+								<label for='input1' id='input1Label'>Argument 1:</label>
+								<input name="input1" id='input1' type="text" class="form-control" disabled="true"/>
 							</div>
 							<div class="form-group">
-								<label for='input2'>Argument 2:</label>
-								<input name="input2" id='input2' type="text" class="form-control"/>
+								<label for='input2' id='input2Label'>Argument 2:</label>
+								<input name="input2" id='input2' type="text" class="form-control" disabled="true"/>
 							</div>
 							<input type="submit" class="btn btn-primary mb-3"/>
 						</form>
@@ -310,7 +310,9 @@
 								</select>
 							</div>
 							<div class="form-group">
-								<input name="customInput" id='customInput' type="text" class="form-control"/>
+								<div id="editor" name="editor" style="height: 12em; width: inherit;"></div>
+								<!-- hidden editorText is used by php to retrieve query from ace editor -->
+								<input id="editorText" name="editorText" style="display:none"/>
 							</div>
 							<input type="submit" class="btn btn-primary mb-3"/>
 						</form>
@@ -369,7 +371,7 @@
 							echo '</thead>';
 							echo '</table>';
 						} 
-						else if($_POST['customInput'] != '')
+						else if($_POST['editorText'] != '')
 						{
 							echo '<label for="output">Output:</label>';
 							$customQueryResult;
@@ -377,7 +379,7 @@
 							switch ($_POST['type'])
 							{
 								case "q":
-									$customQueryResult = customQuery($_POST['customInput']);
+									$customQueryResult = customQuery($_POST['editorText']);
 									echo '<table class="table table-hover table-bordered table-striped">';
 									echo '<tbody>';
 									while($customQueryResult != NULL && $row = $customQueryResult->fetch(PDO::FETCH_ASSOC)) {
@@ -400,7 +402,7 @@
 									echo '</table>';
 									break;
 								case "t":
-									$customQueryResult = customTransaction($_POST['customInput']);
+									$customQueryResult = customTransaction($_POST['editorText']);
 									break;
 							}
 						}
@@ -412,5 +414,61 @@
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		$('#editor').change(setEditorText);
+		var editor = ace.edit("editor");
+		editor.setTheme("ace/theme/textmate");
+		editor.session.setMode("ace/mode/sql");
+
+		// set editorText so php can read value
+		function setEditorText(){
+			document.getElementById('editorText').value = editor.getValue();
+		}
+	</script>
+	<script type="text/javascript">
+		$('#query').change(updateQueryInputs);
+
+		function updateQueryInputs(){
+			resetQueryInputs();
+			var query = document.getElementById("query").value;
+			switch(query) {
+				case "c":
+					document.getElementById('input1Label').innerHTML = 'customerID';
+					document.getElementById('input1').placeholder = '1';
+					document.getElementById('input2').disabled = true;
+					break;
+				case "d":
+					document.getElementById('input1Label').innerHTML = 'customerID';
+					document.getElementById('input1').placeholder = '1';
+					document.getElementById('input2').disabled = true;
+					break;
+				case "e":
+					document.getElementById('input1Label').innerHTML = 'employeeID';
+					document.getElementById('input1').placeholder = '1';
+					document.getElementById('input2Label').innerHTML = 'date';
+					document.getElementById('input2').placeholder = '2019-03-31';
+					break;
+				default:
+					disableQueryInputs();
+			}
+		}
+
+		function resetQueryInputs(){
+			document.getElementById('input1').disabled = false;
+			document.getElementById('input2').disabled = false;
+			document.getElementById('input1Label').innerHTML = 'Argument 1:';
+			document.getElementById('input2Label').innerHTML = 'Argument 2:';
+			document.getElementById('input1Label').placeholder = '';
+			document.getElementById('input2Label').placeholder = '';
+		}
+
+		function disableQueryInputs(){
+			document.getElementById('input1').disabled = true;
+			document.getElementById('input2').disabled = true;
+			document.getElementById('input1Label').innerHTML = 'Argument 1:';
+			document.getElementById('input2Label').innerHTML = 'Argument 2:';
+		}
+	</script>
     </body>
 </html>
