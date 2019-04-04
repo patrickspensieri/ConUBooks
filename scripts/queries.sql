@@ -2,9 +2,15 @@
 select * 
 from book;
 -- b. Get detail of all books that are back order.
-select b.*
-from publisherOrder p1 join publisherOrder_book p2 join book b join publisherShipment s
-where s.dateReceived is null and p1.publisherOrderId = p2.publisherOrderID and b.isbn = p2.isbn and p1.publisherOrderID = s.publisherOrderID;
+select b.isbn, b.title, p2.quantity, p1.dateDue
+from publisherOrder p1 
+join publisherOrder_book p2
+join book b
+join publisherShipment s
+where p1.publisherOrderID = s.publisherOrderID
+and p1.publisherOrderId = p2.publisherOrderID
+and b.isbn = p2.isbn
+and s.dateReceived is null;
 -- c. Get detail of all the special orders for a given customer.
 select c.*, cb.isbn, cb.quantity, b.title
 from customerOrder c
@@ -22,7 +28,8 @@ select s.*, sb.isbn, b.title
 from sale s
 inner join sale_book sb on sb.saleID = s.saleID
 inner join book b on sb.isbn = b.isbn
-where s.employeeID = 2 and s.date between '2019-03-31' and '2019-03-31 23:59:59';
+where s.employeeID = 2 
+and s.date between '2019-03-31' and '2019-03-31 23:59:59';
 -- f. Get details of all purchases made. For each customer, return the total amount paid for the books ordered since the beginning of the year.
 select s1.*, sum(s2.totalPrice) as 'total customer sales in 2019'
 from sale s1
