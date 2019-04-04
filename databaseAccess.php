@@ -143,4 +143,68 @@ function getAllBooksNotReceived()
     $connection = null;
     return $results;
 }
+
+function getAllEmployees()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from employee;");
+    $connection = null;
+    return $results;
+}
+
+function getAllCustomers()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from customer;");
+    $connection = null;
+    return $results;
+}
+
+function getAllAuthors()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from author;");
+    $connection = null;
+    return $results;
+}
+
+function getAllPublishers()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from publisher;");
+    $connection = null;
+    return $results;
+}
+
+function getAllBranches()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from branch;");
+    $connection = null;
+    return $results;
+}
+
+function getAllSales()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from sale;");
+    $connection = null;
+    return $results;
+}
+
+function getAllCustomerOrders()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from publisherOrder;");
+    $connection = null;
+    return $results;
+}
+
+function getPublisherOrders()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from customerOrder;");
+    $connection = null;
+    return $results;
+}
 ?> 
