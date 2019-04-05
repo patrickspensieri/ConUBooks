@@ -56,12 +56,8 @@ create table customer(
 );
 
 create table author(
-    authorID integer primary key,
-    name varchar(50) not null,
-    phone varchar(11),
-    address varchar(100),
-    email varchar(100),
-    foreign key (authorID) references entity(entityID)
+    authorID integer auto_increment primary key,
+    name varchar(50) not null
 );
 
 create table book(
@@ -98,14 +94,16 @@ create table publisherOrder(
     publisherID integer not null,
     datePlaced datetime default current_timestamp() not null,
     dateDue datetime not null,
-    dateReceived datetime,
     foreign key (employeeID) references employee(employeeID),
     foreign key (publisherID) references publisher(publisherID)
 );
 
 create table publisherShipment(
     publisherOrderID integer primary key,
+    employeeID integer,
     trackingNumber varchar(50),
+    dateReceived datetime,
+    foreign key (employeeID) references employee(employeeID),
     foreign key (publisherOrderID) references publisherOrder(publisherOrderID)
 );
 
@@ -158,14 +156,16 @@ create table customerOrder(
     customerID integer not null,
     employeeID integer not null,
     datePlaced datetime default current_timestamp() not null,
-    dateReceived datetime,
     foreign key (customerID) references customer(customerID),
     foreign key (employeeID) references employee(employeeID)
 );
 
 create table customerShipment(
     customerOrderID integer primary key,
+    employeeID integer,
     trackingNumber varchar(50),
+    dateReceived datetime,
+    foreign key (employeeID) references employee(employeeID),
     foreign key (customerOrderID) references customerOrder(customerOrderID)
 );
 
@@ -180,16 +180,6 @@ create table customerOrder_book(
 
 -- set the delimeter
 DELIMITER //
--- insertAuthor
-CREATE PROCEDURE insertAuthor(
-    IN name varchar(50),
-    IN phone varchar(11),
-    IN address varchar(100),
-    IN email varchar(100))
-BEGIN
-  INSERT INTO entity VALUES();
-  INSERT INTO author VALUES(LAST_INSERT_ID(), name, phone, address, email);
-END //
 -- insertEmployee
 CREATE PROCEDURE insertEmployee(
     IN ssn integer(9),

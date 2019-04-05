@@ -73,7 +73,15 @@ function getAllBooks()
 function getAllBooksBackOrdered()
 {
     $connection = conn();
-    $results    = $connection->query("select b.* from publisherOrder p1 join publisherOrder_book p2 join book b where dateReceived is null and p1.publisherOrderId = p2.publisherOrderID and b.isbn = p2.isbn;");
+    $results    = $connection->query("select b.isbn, b.title, p2.quantity, p1.dateDue
+    from publisherOrder p1 
+    join publisherOrder_book p2
+    join book b
+    join publisherShipment s
+    where p1.publisherOrderID = s.publisherOrderID
+    and p1.publisherOrderId = p2.publisherOrderID
+    and b.isbn = p2.isbn
+    and s.dateReceived is null;");
     $connection = null;
     return $results;
 }
@@ -83,7 +91,11 @@ function getAllSpecialOrdersByCustomer($cid)
 {
     $connection = conn();
     try {
-        $results = $connection->query("select c.*, cb.isbn, cb.quantity, b.title from customerOrder c inner join customerOrder_book cb on cb.customerOrderID = c.customerOrderID inner join book b on cb.isbn = b.isbn where c.customerID = $cid;");
+        $results = $connection->query("select c.*, cb.isbn, cb.quantity, b.title
+        from customerOrder c
+        inner join customerOrder_book cb on cb.customerOrderID = c.customerOrderID
+        inner join book b on cb.isbn = b.isbn
+        where c.customerID = $cid;");
     }
     catch (Exception $e) {
         echo "Incorrect $cid";
@@ -97,7 +109,11 @@ function getAllPurchasesByCustomer($cid)
 {
     $connection = conn();
     try {
-        $results = $connection->query("select s.*, sb.isbn, sb.quantity, sb.pricePerBook, b.title from sale s inner join sale_book sb on sb.saleID = s.saleID inner join book b on sb.isbn = b.isbn where s.customerID = $cid;");
+        $results = $connection->query("select s.*, sb.isbn, sb.quantity, sb.pricePerBook, b.title
+        from sale s
+        inner join sale_book sb on sb.saleID = s.saleID
+        inner join book b on sb.isbn = b.isbn
+        where s.customerID = $cid;");
     }
     catch (Exception $e) {
         echo "Incorrect $cid";
@@ -111,7 +127,12 @@ function getAllSalesByEmployeeOnDate($cid, $date)
 {
     $connection = conn();
     try {
-        $results = $connection->query("select s.*, sb.isbn, b.title from sale s inner join sale_book sb on sb.saleID = s.saleID inner join book b on sb.isbn = b.isbn where s.employeeID = $cid and s.date between '$date' and '$date 23:59:59';");
+        $results = $connection->query("select s.*, sb.isbn, b.title
+        from sale s
+        inner join sale_book sb on sb.saleID = s.saleID
+        inner join book b on sb.isbn = b.isbn
+        where s.employeeID = $cid 
+        and s.date between '$date' and '$date 23:59:59';");
     }
     catch (Exception $e) {
         echo "Incorrect $cid or $date";
@@ -125,7 +146,11 @@ function getAllSalesByEmployeeOnDate($cid, $date)
 function getAllPurchases()
 {
     $connection = conn();
-    $results    = $connection->query("select s1.*, sum(s2.totalPrice) as 'total customer sales in 2019' from sale s1 inner join sale s2 on s1.customerID = s2.customerID where s1.date between '2019-01-01' and '2019-12-31' and s2.date between '2019-01-01' and '2019-12-31';");
+    $results    = $connection->query("select s1.*, sum(s2.totalPrice) as 'total customer sales in 2019'
+    from sale s1
+    inner join sale s2 on s1.customerID = s2.customerID
+    where s1.date between '2019-01-01' and '2019-12-31'
+    and s2.date between '2019-01-01' and '2019-12-31';");
     $connection = null;
     return $results;
 }
@@ -134,12 +159,77 @@ function getAllPurchases()
 function getAllBooksNotReceived()
 {
     $connection = conn();
-    $results    = $connection->query("select b.title, pb.isbn, pb.quantity, p.dateDue, p.dateReceived
-        from publisherOrder p
-        inner join publisherOrder_book pb on p.publisherOrderID = pb.publisherOrderID
-        inner join book b on pb.isbn = b.isbn
-        where p.dateReceived > p.dateDue
-        or (p.dateReceived is null and current_timestamp() > p.dateDue);");
+    $results    = $connection->query("select b.title, pb.isbn, pb.quantity, p.dateDue
+    from publisherOrder p
+    inner join publisherOrder_book pb on p.publisherOrderID = pb.publisherOrderID
+    inner join book b on pb.isbn = b.isbn
+    inner join publisherShipment s on s.publisherOrderID = p.publisherOrderID
+    where s.dateReceived > p.dateDue
+    or (s.dateReceived is null and current_timestamp() > p.dateDue);");
+    $connection = null;
+    return $results;
+}
+
+function getAllEmployees()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from employee;");
+    $connection = null;
+    return $results;
+}
+
+function getAllCustomers()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from customer;");
+    $connection = null;
+    return $results;
+}
+
+function getAllAuthors()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from author;");
+    $connection = null;
+    return $results;
+}
+
+function getAllPublishers()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from publisher;");
+    $connection = null;
+    return $results;
+}
+
+function getAllBranches()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from branch;");
+    $connection = null;
+    return $results;
+}
+
+function getAllSales()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from sale;");
+    $connection = null;
+    return $results;
+}
+
+function getAllCustomerOrders()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from customerOrder;");
+    $connection = null;
+    return $results;
+}
+
+function getPublisherOrders()
+{
+    $connection = conn();
+    $results    = $connection->query("select * from publisherOrder;");
     $connection = null;
     return $results;
 }
