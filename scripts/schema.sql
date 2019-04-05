@@ -1,5 +1,6 @@
 -- disable foreign key checks to delete tables in any order
 SET FOREIGN_KEY_CHECKS = 0;
+-- drop tables
 drop table if exists customerOrder_book;
 drop table if exists author_book;
 drop table if exists book_publisher;
@@ -16,31 +17,48 @@ drop table if exists customer;
 drop table if exists author;
 drop table if exists book;
 drop table if exists publisher;
+drop table if exists address;
+drop table if exists entity;
+-- drop procedures
+drop procedure if exists insertEmployee;
+drop procedure if exists insertCustomer;
+drop procedure if exists insertPublisher;
+drop procedure if exists insertBranch;
+drop procedure if exists getEmployee;
+drop procedure if exists getCustomer;
+drop procedure if exists getPublisher;
+drop procedure if exists getBranch;
+
 SET FOREIGN_KEY_CHECKS = 1;
 
-create table employee(
-    employeeID integer auto_increment primary key,
-    ssn integer(9) not null,
+create table entity(
+    entityID integer auto_increment primary key,
     name varchar(50) not null,
     phone varchar(11) not null,
-    address varchar(100) not null,
     email varchar(100)
 );
 
+create table address(
+    entityID integer primary key,
+    civicNumber varchar(50) not null,
+    city varchar(50) not null,
+    province varchar(20) not null,
+    postalCode varchar(20) not null,
+    foreign key (entityID) references entity(entityID)
+);
+
+create table employee(
+    employeeID integer auto_increment primary key,
+    ssn integer(9) unique not null
+);
+
 create table customer(
-    customerID integer auto_increment primary key,
-    name varchar(50) not null,
-    phone varchar(11),
-    address varchar(100) not null,
-    email varchar(100)
+    customerID integer auto_increment primary key
 );
 
 create table author(
     authorID integer auto_increment primary key,
-    name varchar(50) not null,
-    phone varchar(11),
-    address varchar(100),
-    email varchar(100)
+    name varchar(50) not null
 );
 
 create table book(
@@ -52,20 +70,12 @@ create table book(
 );
 
 create table publisher(
-    publisherID integer auto_increment primary key,
-    name varchar(50) not null,
-    phone varchar(11),
-    address varchar(100) not null,
-    email varchar(100)
+    publisherID integer auto_increment primary key
 );
 
 create table branch(
     branchID integer not null,
     publisherID integer not null,
-    name varchar(50) not null,
-    phone varchar(11),
-    address varchar(100) not null,
-    email varchar(100),
     branchManager varchar(50) not null,
     primary key (branchID, publisherID),
     foreign key (publisherID) references publisher(publisherID)
@@ -77,14 +87,16 @@ create table publisherOrder(
     publisherID integer not null,
     datePlaced datetime default current_timestamp() not null,
     dateDue datetime not null,
-    dateReceived datetime,
     foreign key (employeeID) references employee(employeeID),
     foreign key (publisherID) references publisher(publisherID)
 );
 
 create table publisherShipment(
     publisherOrderID integer primary key,
+    employeeID integer,
     trackingNumber varchar(50),
+    dateReceived datetime,
+    foreign key (employeeID) references employee(employeeID),
     foreign key (publisherOrderID) references publisherOrder(publisherOrderID)
 );
 
@@ -137,14 +149,16 @@ create table customerOrder(
     customerID integer not null,
     employeeID integer not null,
     datePlaced datetime default current_timestamp() not null,
-    dateReceived datetime,
     foreign key (customerID) references customer(customerID),
     foreign key (employeeID) references employee(employeeID)
 );
 
 create table customerShipment(
     customerOrderID integer primary key,
+    employeeID integer,
     trackingNumber varchar(50),
+    dateReceived datetime,
+    foreign key (employeeID) references employee(employeeID),
     foreign key (customerOrderID) references customerOrder(customerOrderID)
 );
 
@@ -156,3 +170,79 @@ create table customerOrder_book(
     foreign key (customerOrderID) references customerOrder(customerOrderID),
     foreign key (isbn) references book(isbn)
 );
+
+-- set the delimeter
+DELIMITER //
+-- insertEmployee
+CREATE PROCEDURE insertEmployee(
+    IN ssn integer(9),
+    IN name varchar(50),
+    IN phone varchar(11),
+    IN email varchar(100))
+BEGIN
+  INSERT INTO entity(name, phone, email) VALUES(name, phone, email);
+  INSERT INTO employee VALUES(LAST_INSERT_ID(), ssn);
+END //
+-- insertCustomer
+CREATE PROCEDURE insertCustomer(
+    IN name varchar(50),
+    IN phone varchar(11),
+    IN email varchar(100))
+BEGIN
+  INSERT INTO entity(name, phone, email) VALUES(name, phone, email);
+  INSERT INTO customer VALUES(LAST_INSERT_ID());
+END //
+-- insertPublisher
+CREATE PROCEDURE insertPublisher(
+    IN name varchar(50),
+    IN phone varchar(11),
+    IN email varchar(100))
+BEGIN
+  INSERT INTO entity(name, phone, email) VALUES(name, phone, email);
+  INSERT INTO publisher VALUES(LAST_INSERT_ID());
+END //
+-- insertBranch
+CREATE PROCEDURE insertBranch(
+    IN publisherID integer,
+    IN name varchar(50),
+    IN phone varchar(11),
+    IN email varchar(100),
+    IN branchManager varchar(50))
+BEGIN
+  INSERT INTO entity(name, phone, email) VALUES(name, phone, email);
+  INSERT INTO branch VALUES(LAST_INSERT_ID(), publisherID, branchManager);
+END //
+-- getEmployee
+CREATE PROCEDURE getEmployee()
+BEGIN
+  select employeeID, ssn, name, phone, email, civicNumber, city, province, postalCode
+  from employee
+  inner join entity on employeeID = entity.entityID
+  inner join address on employeeID = address.entityID;
+END //
+-- getCustomer
+CREATE PROCEDURE getCustomer()
+BEGIN
+  select customerID, name, phone, email, civicNumber, city, province, postalCode
+  from customer
+  inner join entity on customerID = entity.entityID
+  inner join address on customerID = address.entityID;
+END //
+-- getPublisher
+CREATE PROCEDURE getPublisher()
+BEGIN
+  select publisherID, name, phone, email, civicNumber, city, province, postalCode
+  from publisher
+  inner join entity on publisherID = entity.entityID
+  inner join address on publisherID = address.entityID;
+END //
+-- getBranch
+CREATE PROCEDURE getBranch()
+BEGIN
+  select branchID, publisherID, name, phone, email, branchManager, civicNumber, city, province, postalCode
+  from branch
+  inner join entity on branchID = entity.entityID
+  inner join address on branchID = address.entityID;
+END //
+-- set delimeter back to ;
+DELIMITER ;
