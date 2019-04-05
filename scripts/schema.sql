@@ -20,11 +20,17 @@ drop table if exists publisher;
 drop table if exists address;
 drop table if exists entity;
 -- drop procedures
-drop procedure if exists insertAuthor;
+drop procedure if exists insertEmployee;
+drop procedure if exists insertCustomer;
+drop procedure if exists insertPublisher;
+drop procedure if exists insertBranch;
 SET FOREIGN_KEY_CHECKS = 1;
 
 create table entity(
-    entityID integer auto_increment primary key
+    entityID integer auto_increment primary key,
+    name varchar(50) not null,
+    phone varchar(11) not null,
+    email varchar(100)
 );
 
 create table address(
@@ -32,27 +38,17 @@ create table address(
     civicNumber varchar(50) not null,
     city varchar(50) not null,
     province varchar(20) not null,
-    postalCode varchar(6) not null,
+    postalCode varchar(20) not null,
     foreign key (entityID) references entity(entityID)
 );
 
--- employee using entity and address
--- TODO make use of address table
 create table employee(
     employeeID integer auto_increment primary key,
-    ssn integer(9) unique not null,
-    name varchar(50) not null,
-    phone varchar(11) not null,
-    address varchar(100) not null,
-    email varchar(100)
+    ssn integer(9) unique not null
 );
 
 create table customer(
-    customerID integer auto_increment primary key,
-    name varchar(50) not null,
-    phone varchar(11),
-    address varchar(100) not null,
-    email varchar(100)
+    customerID integer auto_increment primary key
 );
 
 create table author(
@@ -69,20 +65,12 @@ create table book(
 );
 
 create table publisher(
-    publisherID integer auto_increment primary key,
-    name varchar(50) not null,
-    phone varchar(11),
-    address varchar(100) not null,
-    email varchar(100)
+    publisherID integer auto_increment primary key
 );
 
 create table branch(
     branchID integer not null,
     publisherID integer not null,
-    name varchar(50) not null,
-    phone varchar(11),
-    address varchar(100) not null,
-    email varchar(100),
     branchManager varchar(50) not null,
     primary key (branchID, publisherID),
     foreign key (publisherID) references publisher(publisherID)
@@ -185,45 +173,39 @@ CREATE PROCEDURE insertEmployee(
     IN ssn integer(9),
     IN name varchar(50),
     IN phone varchar(11),
-    IN address varchar(100),
     IN email varchar(100))
 BEGIN
-  INSERT INTO entity VALUES();
-  INSERT INTO author VALUES(LAST_INSERT_ID(), ssn, name, phone, address, email);
+  INSERT INTO entity(name, phone, email) VALUES(name, phone, email);
+  INSERT INTO employee VALUES(LAST_INSERT_ID(), ssn);
 END //
 -- insertCustomer
 CREATE PROCEDURE insertCustomer(
     IN name varchar(50),
     IN phone varchar(11),
-    IN address varchar(100),
     IN email varchar(100))
 BEGIN
-  INSERT INTO entity VALUES();
-  INSERT INTO author VALUES(LAST_INSERT_ID(), name, phone, address, email);
+  INSERT INTO entity(name, phone, email) VALUES(name, phone, email);
+  INSERT INTO customer VALUES(LAST_INSERT_ID());
 END //
 -- insertPublisher
 CREATE PROCEDURE insertPublisher(
     IN name varchar(50),
     IN phone varchar(11),
-    IN address varchar(100),
     IN email varchar(100))
 BEGIN
-  INSERT INTO entity VALUES();
-  INSERT INTO author VALUES(LAST_INSERT_ID(), name, phone, address, email);
+  INSERT INTO entity(name, phone, email) VALUES(name, phone, email);
+  INSERT INTO publisher VALUES(LAST_INSERT_ID());
 END //
 -- insertBranch
 CREATE PROCEDURE insertBranch(
     IN publisherID integer,
+    IN name varchar(50),
     IN phone varchar(11),
-    IN address varchar(100),
     IN email varchar(100),
     IN branchManager varchar(50))
 BEGIN
-  INSERT INTO entity VALUES();
-  INSERT INTO author VALUES(LAST_INSERT_ID(), publisherID, name, phone, address, email, branchManager);
+  INSERT INTO entity(name, phone, email) VALUES(name, phone, email);
+  INSERT INTO branch VALUES(LAST_INSERT_ID(), publisherID, branchManager);
 END //
-
-
-
 -- set delimeter back to ;
 DELIMITER ;

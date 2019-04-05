@@ -16,13 +16,13 @@ select c.*, cb.isbn, cb.quantity, b.title
 from customerOrder c
 inner join customerOrder_book cb on cb.customerOrderID = c.customerOrderID
 inner join book b on cb.isbn = b.isbn
-where c.customerID = 2;
+where c.customerID = 4;
 -- d. Get detail of all purchases made by a given customer.
 select s.*, sb.isbn, sb.quantity, sb.pricePerBook, b.title
 from sale s
 inner join sale_book sb on sb.saleID = s.saleID
 inner join book b on sb.isbn = b.isbn
-where s.customerID = 1;
+where s.customerID = 3;
 -- e. Get detail of all the sales made by a given employee on a specific date.
 select s.*, sb.isbn, b.title
 from sale s

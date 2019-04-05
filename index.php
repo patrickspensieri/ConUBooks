@@ -423,7 +423,7 @@
 
 		// set editorText so php can read value
 		function setEditorText(){
-			document.getElementById('editorText').value = editor.getValue();
+			document.getElementById('editorText').value = editor.getValue().trim();
 		}
 	</script>
 	<script type="text/javascript">
