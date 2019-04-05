@@ -24,6 +24,11 @@ drop procedure if exists insertEmployee;
 drop procedure if exists insertCustomer;
 drop procedure if exists insertPublisher;
 drop procedure if exists insertBranch;
+drop procedure if exists getEmployee;
+drop procedure if exists getCustomer;
+drop procedure if exists getPublisher;
+drop procedure if exists getBranch;
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 create table entity(
@@ -206,6 +211,38 @@ CREATE PROCEDURE insertBranch(
 BEGIN
   INSERT INTO entity(name, phone, email) VALUES(name, phone, email);
   INSERT INTO branch VALUES(LAST_INSERT_ID(), publisherID, branchManager);
+END //
+-- getEmployee
+CREATE PROCEDURE getEmployee()
+BEGIN
+  select employeeID, ssn, name, phone, email, civicNumber, city, province, postalCode
+  from employee
+  inner join entity on employeeID = entity.entityID
+  inner join address on employeeID = address.entityID;
+END //
+-- getCustomer
+CREATE PROCEDURE getCustomer()
+BEGIN
+  select customerID, name, phone, email, civicNumber, city, province, postalCode
+  from customer
+  inner join entity on customerID = entity.entityID
+  inner join address on customerID = address.entityID;
+END //
+-- getPublisher
+CREATE PROCEDURE getPublisher()
+BEGIN
+  select publisherID, name, phone, email, civicNumber, city, province, postalCode
+  from publisher
+  inner join entity on publisherID = entity.entityID
+  inner join address on publisherID = address.entityID;
+END //
+-- getBranch
+CREATE PROCEDURE getBranch()
+BEGIN
+  select branchID, publisherID, name, phone, email, branchManager, civicNumber, city, province, postalCode
+  from branch
+  inner join entity on branchID = entity.entityID
+  inner join address on branchID = address.entityID;
 END //
 -- set delimeter back to ;
 DELIMITER ;

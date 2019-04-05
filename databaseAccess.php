@@ -1,19 +1,13 @@
  <?php
 function conn()
 {
-    // $servername = "spc353.encs.concordia.ca";
-    // $dbname     = "spc353_4";
-    // $username   = "spc353_4";
-    // $password   = "1assword";
-
-    $servername = "127.0.0.1";
-    $dbname     = "bookstore";
-    $username   = "root";
-    $password   = "";
+    $servername = "spc353.encs.concordia.ca";
+    $dbname     = "spc353_4";
+    $username   = "spc353_4";
+    $password   = "1assword";
     try {
         $connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        // echo "Connected successfully <br/>";
     }
     catch (PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
@@ -178,7 +172,7 @@ function getAllBooksNotReceived()
 function getAllEmployees()
 {
     $connection = conn();
-    $results    = $connection->query("select * from employee;");
+    $results    = $connection->query("call getEmployee();");
     $connection = null;
     return $results;
 }
@@ -186,7 +180,7 @@ function getAllEmployees()
 function getAllCustomers()
 {
     $connection = conn();
-    $results    = $connection->query("select * from customer;");
+    $results    = $connection->query("call getCustomer();");
     $connection = null;
     return $results;
 }
@@ -202,7 +196,7 @@ function getAllAuthors()
 function getAllPublishers()
 {
     $connection = conn();
-    $results    = $connection->query("select * from publisher;");
+    $results    = $connection->query("call getPublisher();");
     $connection = null;
     return $results;
 }
@@ -210,7 +204,7 @@ function getAllPublishers()
 function getAllBranches()
 {
     $connection = conn();
-    $results    = $connection->query("select * from branch;");
+    $results    = $connection->query("call getBranch();");
     $connection = null;
     return $results;
 }

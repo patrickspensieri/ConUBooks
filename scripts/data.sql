@@ -9,12 +9,13 @@ insert into address values (3, '2774  Roach Road', 'Montreal', 'QC', 'N6E 1A9');
 call insertCustomer('Patrick', '15142222222', 'patrick@mail.com');
 insert into address values (4, '1248  rue des Champs', 'Montreal', 'QC', 'G7H 4N3');
 -- publisher
-call insertPublisher('Penguin Random House', '18007333000', 'orders@randomhouse.com');
+call insertPublisher('Penguin Random House', '18007333000', 'contact@randomhouse.com');
 insert into address values (5, '320  Front St W', 'Toronto', 'ON', 'G7H 4N3');
 call insertPublisher('Oxford University Press', '18002800280', 'contact@oxfordpress.com');
 insert into address values (6, '8  Sampson Mews', 'Toronto', 'ON', 'G7L 5L9');
 -- branch
-call insertBranch(5, 'Penguin Random House Toronto', '14169972330', 'toronto_orders@randomhouse.com', 'Tom Yates');
+call insertBranch(5, 'Penguin Random House Toronto', '14169972330', 'toronto@randomhouse.com', 'Tom Yates');
+insert into address values (7, '3263  James Street', 'Toronto', 'ON', 'V5G 4W7');
 -- author
 insert into author values (1, 'George Orwell');
 insert into author values (2, 'H. G. Wells');
