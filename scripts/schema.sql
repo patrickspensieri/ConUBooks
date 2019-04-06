@@ -44,16 +44,20 @@ create table address(
     city varchar(50) not null,
     province varchar(20) not null,
     postalCode varchar(20) not null,
-    foreign key (entityID) references entity(entityID)
+    foreign key (entityID) references entity(entityID) on delete cascade
 );
 
 create table employee(
     employeeID integer auto_increment primary key,
-    ssn integer(9) unique not null
+    ssn integer(9) unique not null,
+    foreign key (employeeID) references entity(entityID)
+
 );
 
 create table customer(
-    customerID integer auto_increment primary key
+    customerID integer auto_increment primary key,
+    foreign key (customerID) references entity(entityID)
+
 );
 
 create table author(
@@ -64,13 +68,15 @@ create table author(
 create table book(
     isbn char(13) primary key,
     title varchar(100) not null,
-    price decimal(19,4) not null,
+    price decimal(19,2) not null,
     edition smallint not null,
     quantity smallint not null
 );
 
 create table publisher(
-    publisherID integer auto_increment primary key
+    publisherID integer auto_increment primary key,
+    foreign key (publisherID) references entity(entityID)
+
 );
 
 create table branch(
@@ -78,7 +84,8 @@ create table branch(
     publisherID integer not null,
     branchManager varchar(50) not null,
     primary key (branchID, publisherID),
-    foreign key (publisherID) references publisher(publisherID)
+    foreign key (publisherID) references publisher(publisherID),
+    foreign key (branchID) references entity(entityID) on delete cascade
 );
 
 create table publisherOrder(
@@ -97,7 +104,7 @@ create table publisherShipment(
     trackingNumber varchar(50),
     dateReceived datetime,
     foreign key (employeeID) references employee(employeeID),
-    foreign key (publisherOrderID) references publisherOrder(publisherOrderID)
+    foreign key (publisherOrderID) references publisherOrder(publisherOrderID) on delete cascade
 );
 
 create table author_book(
@@ -120,13 +127,13 @@ create table publisherOrder_book(
     isbn char(13) not null,
     quantity smallint default 1 not null,
     primary key (publisherOrderID, isbn),
-    foreign key (publisherOrderID) references publisherOrder(publisherOrderID),
+    foreign key (publisherOrderID) references publisherOrder(publisherOrderID) on delete cascade,
     foreign key (isbn) references book(isbn)
 );
 
 create table sale(
     saleID integer auto_increment primary key,
-    totalPrice decimal(19,4) not null,
+    totalPrice decimal(19,2) not null,
     customerID integer not null,
     employeeID integer not null,
     date datetime not null,
@@ -138,7 +145,7 @@ create table sale_book(
     saleID integer not null,
     isbn char(13) not null,
     quantity smallint default 1 not null,
-    pricePerBook decimal(19,4) not null,
+    pricePerBook decimal(19,2) not null,
     primary key (saleID, isbn),
     foreign key (saleID) references sale(saleID),
     foreign key (isbn) references book(isbn)
@@ -159,7 +166,7 @@ create table customerShipment(
     trackingNumber varchar(50),
     dateReceived datetime,
     foreign key (employeeID) references employee(employeeID),
-    foreign key (customerOrderID) references customerOrder(customerOrderID)
+    foreign key (customerOrderID) references customerOrder(customerOrderID) on delete cascade
 );
 
 create table customerOrder_book(
@@ -167,7 +174,7 @@ create table customerOrder_book(
     isbn char(13) not null,
     quantity smallint not null,
     primary key (customerOrderID, isbn),
-    foreign key (customerOrderID) references customerOrder(customerOrderID),
+    foreign key (customerOrderID) references customerOrder(customerOrderID) on delete cascade,
     foreign key (isbn) references book(isbn)
 );
 
