@@ -232,4 +232,27 @@ function getPublisherOrders()
     $connection = null;
     return $results;
 }
+
+function createTable($results)
+{
+    echo '<table class="table table-hover table-bordered table-striped">';
+    echo '<tbody>';
+    while($results != NULL && $row = $results->fetch(PDO::FETCH_ASSOC)) {
+        $rows = array_keys($row);
+        echo '<tr>';
+        for($i = 0; $i < count($rows); $i++) {
+            echo '<td>'.$row[$rows[$i]].'</td>';
+        }
+        echo '</tr>';
+    }
+    echo '</tbody>';
+    echo '<thead class="thead-dark">';
+    echo '<tr>';
+    for($i = 0; $i < count($rows); $i++) {
+        echo '<th>'.$rows[$i].'</th>';
+    }
+    echo '</tr>';
+    echo '</thead>';
+    echo '</table>';
+}
 ?> 
