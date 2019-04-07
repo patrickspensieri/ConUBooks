@@ -51,7 +51,6 @@ create table employee(
     employeeID integer auto_increment primary key,
     ssn integer(9) unique not null,
     foreign key (employeeID) references entity(entityID)
-
 );
 
 create table customer(
@@ -76,7 +75,6 @@ create table book(
 create table publisher(
     publisherID integer auto_increment primary key,
     foreign key (publisherID) references entity(entityID)
-
 );
 
 create table branch(

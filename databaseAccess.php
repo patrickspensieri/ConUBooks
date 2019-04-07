@@ -72,7 +72,7 @@ function getAllBooks()
 function getAllBooksBackOrdered()
 {
     $connection = conn();
-    $results    = $connection->query("select b.isbn, b.title, p2.quantity, p1.dateDue
+    $results    = $connection->query("select p1.publisherOrderID, b.isbn, b.title, p2.quantity, p1.dateDue
     from publisherOrder p1 
     join publisherOrder_book p2
     join book b

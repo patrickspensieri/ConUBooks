@@ -261,12 +261,12 @@
 			switch(query) {
 				case "c":
 					document.getElementById('input1Label').innerHTML = 'customerID';
-					document.getElementById('input1').placeholder = '1';
+					document.getElementById('input1').placeholder = '5';
 					document.getElementById('input2').disabled = true;
 					break;
 				case "d":
 					document.getElementById('input1Label').innerHTML = 'customerID';
-					document.getElementById('input1').placeholder = '1';
+					document.getElementById('input1').placeholder = '5';
 					document.getElementById('input2').disabled = true;
 					break;
 				case "e":
