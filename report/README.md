@@ -596,4 +596,4 @@ Everything else, including making a sale, placing publisher orders and updating 
 ### Contribution
 The first drafts of E/R diagram was developed by Andre and Patrick, later refined with feedback from both Pablo and Philippe. The E/R diagram was then made into a relational database by Andre and Patrick. Pablo and Philippe tested the first versions, providing insight on how to improve both the E/R diagram and the database implementation.
 
-The first versions of the web application were put up by Pablo and Philippe. Andre and Patrick worked together to improve the design. ConUShop's books are inspired from Patrick's bookshelf. Pablo's cat did all the data entry.
+The first versions of the web application were put up by Pablo and Philippe. Andre and Patrick worked together to improve the design. ConUBook's books are inspired from Patrick's bookshelf. Pablo's cat did all the data entry.

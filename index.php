@@ -435,11 +435,11 @@
 		}
 
 		function insertPublisherOrderTemplate(){
-			return "insert into publisherOrder values (\n2, \n1, \n6, \ncurrent_timestamp() - interval 20 day, \ncurrent_timestamp() - interval 1 day);";
+			return "insert into publisherOrder values (\npublisherOrderID, \nemployeeID, \npublisherID, \ncurrent_timestamp() - interval 20 day, \ncurrent_timestamp() - interval 1 day);";
 		}
 
 		function insertPublisherShipmentTemplate(){
-			return "insert into publisherShipment values (\n1, \n2, \n'AA 9934 4033 AF', \n'2019-01-15');";
+			return "insert into publisherShipment values (\npublisherOrderID, \nemployeeID, \n'AA 9934 4033 AF', \n'2019-01-15');";
 		}
 
 		function insertAuthor_BookTemplate(){
@@ -455,7 +455,7 @@
 		}
 
 		function insertSaleTemplate(){
-			return "insert into sale values (\n1, \n32.34, \n3, \n2, \n'2019-03-31 11:04:59');";
+			return "insert into sale values (\nsaleID, \n32.34, \ncustomerID, \nemployeeID, \n'2019-03-31 11:04:59');";
 		}
 
 		function insertSale_BookTemplate(){
@@ -463,11 +463,11 @@
 		}
 
 		function insertCustomerOrderTemplate(){
-			return "insert into customerOrder values (\n1, \n4, \n1, \ncurrent_timestamp());";
+			return "insert into customerOrder values (\ncustomerOrderID, \ncustomerID, \nemployeeID, \ncurrent_timestamp());";
 		}
 
 		function insertCustomerShipmentTemplate(){
-			return "insert into customerShipment values (\n1, \n1, \n'2349 3340 0942 3334', \nnull);";
+			return "insert into customerShipment values (\ncustomerOrderID, \nemployeeID, \n'2349 3340 0942 3334', \nnull);";
 		}
 
 		function insertCustomerOrder_BookTemplate(){
