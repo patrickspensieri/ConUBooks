@@ -1,8 +1,12 @@
 ## ConUBooks - Report
-#### COMP353 - N. Shiri
+#### COMP353 Section X - N. Shiri
 #### Monday, April 8th 2019
 
-spc353_4@encs.concordia.ca
+Team: spc353_4
+
+Team Representative: Patrick Spensieri
+
+Team Email: spc353_4@encs.concordia.ca
 
 | Name                  | ID        |
 |---                    |---        |
@@ -14,7 +18,12 @@ spc353_4@encs.concordia.ca
 ---
 
 ### GitHub repository
-The project is currently a private repository. For access, please email **patrick.spensieri@gmail.com**.
+[github.com/patrickspensieri/ConUBooks](https://github.com/patrickspensieri/ConUBooks)
+
+If the project is still a private repository, please email **patrick.spensieri@gmail.com** for access.
+
+#### Project URL
+[spc353.encs.concordia.ca](https://spc353.encs.concordia.ca)
 
 ### Assumptions
 The following assumptions were made
@@ -36,7 +45,6 @@ The following assumptions were made
 
     While this can be done with one query detailing all purchases, and another total customer expenses in a given year, it is assumed that all must be done with one query, and that books purchased must also be presented. Hence the use of joins and subqueries.
 
-
 ### ER Diagram
 All entities that have a *name, phone number, email* and *address* extend the `entity` table.
 - Allows an `employee` to make purchases and act as a `customer`.
@@ -44,6 +52,8 @@ All entities that have a *name, phone number, email* and *address* extend the `e
 - `publisher` and `book` form a one-to-many relation, where one publisher can have many books. One-to-many relations require a mapping table, such as `book_publisher`. The primary key would be `(isbn)`.
 - `author` and `book` for a many-to-many relation, where one book can have many authors. Many-to-many relations also require a mapping table, such as `author_book`. The primary key for such tables would be `(isbn, authorID)`.
 - `sale` and `customer` form a one-to-one relation, in that a sale is made by a single customer. These relations do not require a mapping table.
+
+A full resolution E/R diagram is included in the project code, under `ConUBooks/report/images/ERDiagram.png`. Else, it can be viewed [here](https://drive.google.com/file/d/1WMSZkk6wpENsKHuOdk3z7nG8eI4DbPHw/view?usp=sharing).
 
 ![ER Diagram](images/ERDiagram.png)
 
@@ -564,90 +574,26 @@ or (s.dateReceived is null and current_timestamp() > p.dateDue);
 ```
 
 #### Query output
-Detailed below is the output of the `queries.sql` script with seeded with the `data.sql` script.
-```
-+---------------+----------------------+--------+---------+----------+
-| isbn          | title                | price  | edition | quantity |
-+---------------+----------------------+--------+---------+----------+
-| 9780099465898 | Trainspotting        |  21.95 |       1 |        2 |
-| 9780141182606 | A Clockwork Orange   |  17.50 |       1 |        2 |
-| 9780141196305 | Chess                |   4.99 |       1 |        1 |
-| 9780141393049 | Nineteen Eighty-Four |  19.84 |       1 |       10 |
-| 9780146000733 | The Time Machine     |  12.50 |       1 |        5 |
-| 9780199660179 | I-Language           | 120.45 |       2 |        0 |
-+---------------+----------------------+--------+---------+----------+
-6 rows in set (0.00 sec)
+Detailed below is the output of the `queries.sql` script seeded with the `data.sql` script. Query results can also be found [here](https://github.com/patrickspensieri/ConUBooks/blob/master/scripts/queryResults.txt) or in the project code, under `ConUBook/scripts/queryResults.txt`.
 
-+------------------+---------------+----------------------+----------+---------------------+
-| publisherOrderID | isbn          | title                | quantity | dateDue             |
-+------------------+---------------+----------------------+----------+---------------------+
-|                2 | 9780199660179 | I-Language           |        4 | 2019-04-07 01:57:41 |
-|                3 | 9780141182606 | A Clockwork Orange   |        2 | 2019-01-18 01:57:41 |
-|                3 | 9780141196305 | Chess                |        4 | 2019-01-18 01:57:41 |
-|                3 | 9780141393049 | Nineteen Eighty-Four |        4 | 2019-01-18 01:57:41 |
-|                3 | 9780146000733 | The Time Machine     |        4 | 2019-01-18 01:57:41 |
-+------------------+---------------+----------------------+----------+---------------------+
-5 rows in set (0.00 sec)
+![Query Results](images/queryResults.jpg)
 
-+-----------------+------------+------------+---------------------+---------------+----------+----------------------+
-| customerOrderID | customerID | employeeID | datePlaced          | isbn          | quantity | title                |
-+-----------------+------------+------------+---------------------+---------------+----------+----------------------+
-|               3 |          5 |          2 | 2019-04-08 01:57:41 | 9780099465898 |       10 | Trainspotting        |
-|               3 |          5 |          2 | 2019-04-08 01:57:41 | 9780141182606 |       10 | A Clockwork Orange   |
-|               3 |          5 |          2 | 2019-04-08 01:57:41 | 9780141196305 |       10 | Chess                |
-|               3 |          5 |          2 | 2019-04-08 01:57:41 | 9780141393049 |       10 | Nineteen Eighty-Four |
-|               3 |          5 |          2 | 2019-04-08 01:57:41 | 9780146000733 |       10 | The Time Machine     |
-|               3 |          5 |          2 | 2019-04-08 01:57:41 | 9780199660179 |       10 | I-Language           |
-+-----------------+------------+------------+---------------------+---------------+----------+----------------------+
-6 rows in set (0.00 sec)
+### Implemented Functionalities
+Both the E/R Diagram and the database implementation meet all the requirements for the database system. The application allows employees to view and update the bookstore's database, as shown below.
 
-+--------+------------+------------+------------+---------------------+---------------+----------+--------------+----------------------+
-| saleID | totalPrice | customerID | employeeID | date                | isbn          | quantity | pricePerBook | title                |
-+--------+------------+------------+------------+---------------------+---------------+----------+--------------+----------------------+
-|      3 |     225.74 |          5 |          1 | 2019-03-31 12:04:59 | 9780141393049 |        1 |        19.84 | Nineteen Eighty-Four |
-|      3 |     225.74 |          5 |          1 | 2019-03-31 12:04:59 | 9780146000733 |        2 |        12.50 | The Time Machine     |
-|      3 |     225.74 |          5 |          1 | 2019-03-31 12:04:59 | 9780199660179 |        2 |        90.45 | I-Language           |
-|      4 |      66.47 |          5 |          2 | 2019-03-31 13:04:59 | 9780099465898 |        2 |        21.95 | Trainspotting        |
-|      4 |      66.47 |          5 |          2 | 2019-03-31 13:04:59 | 9780141182606 |        1 |        17.50 | A Clockwork Orange   |
-|      4 |      66.47 |          5 |          2 | 2019-03-31 13:04:59 | 9780141196305 |        1 |         4.99 | Chess                |
-+--------+------------+------------+------------+---------------------+---------------+----------+--------------+----------------------+
-6 rows in set (0.00 sec)
+Tables detailing commonly used entities such as *books*, *customers* or *publisher orders* are always present at the top of the page, offering easy access when bookstore employees reference data.
 
-+--------+------------+------------+------------+---------------------+---------------+----------------------+
-| saleID | totalPrice | customerID | employeeID | date                | isbn          | title                |
-+--------+------------+------------+------------+---------------------+---------------+----------------------+
-|      1 |      32.34 |          3 |          2 | 2019-03-31 09:04:59 | 9780141393049 | Nineteen Eighty-Four |
-|      1 |      32.34 |          3 |          2 | 2019-03-31 09:04:59 | 9780146000733 | The Time Machine     |
-|      4 |      66.47 |          5 |          2 | 2019-03-31 13:04:59 | 9780099465898 | Trainspotting        |
-|      4 |      66.47 |          5 |          2 | 2019-03-31 13:04:59 | 9780141182606 | A Clockwork Orange   |
-|      4 |      66.47 |          5 |          2 | 2019-03-31 13:04:59 | 9780141196305 | Chess                |
-+--------+------------+------------+------------+---------------------+---------------+----------------------+
-5 rows in set (0.00 sec)
+![Feature 1](images/feature1.jpg)
 
-+--------+------------+------------+------------+---------------------+---------------+------------------------------+
-| saleID | totalPrice | customerID | employeeID | date                | isbn          | total customer sales in 2019 |
-+--------+------------+------------+------------+---------------------+---------------+------------------------------+
-|      1 |      32.34 |          3 |          2 | 2019-03-31 09:04:59 | 9780141393049 |                        32.34 |
-|      1 |      32.34 |          3 |          2 | 2019-03-31 09:04:59 | 9780146000733 |                        32.34 |
-|      2 |      17.50 |          4 |          1 | 2019-03-31 10:04:59 | 9780141182606 |                        17.50 |
-|      3 |     225.74 |          5 |          1 | 2019-03-31 12:04:59 | 9780141393049 |                       292.21 |
-|      3 |     225.74 |          5 |          1 | 2019-03-31 12:04:59 | 9780146000733 |                       292.21 |
-|      3 |     225.74 |          5 |          1 | 2019-03-31 12:04:59 | 9780199660179 |                       292.21 |
-|      4 |      66.47 |          5 |          2 | 2019-03-31 13:04:59 | 9780099465898 |                       292.21 |
-|      4 |      66.47 |          5 |          2 | 2019-03-31 13:04:59 | 9780141182606 |                       292.21 |
-|      4 |      66.47 |          5 |          2 | 2019-03-31 13:04:59 | 9780141196305 |                       292.21 |
-+--------+------------+------------+------------+---------------------+---------------+------------------------------+
-9 rows in set (0.00 sec)
+As shown below, several premade queries are included, allowing employees to quickly answer common questions. Here, the employee is inquiring about the purchases made by a given customer, and can see the results of their query.
 
-+------------------+----------------------+---------------+----------+---------------------+
-| publisherOrderID | title                | isbn          | quantity | dateDue             |
-+------------------+----------------------+---------------+----------+---------------------+
-|                1 | Nineteen Eighty-Four | 9780141393049 |       10 | 2019-01-14 00:00:00 |
-|                2 | I-Language           | 9780199660179 |        4 | 2019-04-07 01:57:41 |
-|                3 | A Clockwork Orange   | 9780141182606 |        2 | 2019-01-18 01:57:41 |
-|                3 | Chess                | 9780141196305 |        4 | 2019-01-18 01:57:41 |
-|                3 | Nineteen Eighty-Four | 9780141393049 |        4 | 2019-01-18 01:57:41 |
-|                3 | The Time Machine     | 9780146000733 |        4 | 2019-01-18 01:57:41 |
-+------------------+----------------------+---------------+----------+---------------------+
-6 rows in set (0.00 sec)
-```
+![Feature 2](images/feature2.jpg)
+
+Everything else, including making a sale, placing publisher orders and updating a customer's address can be done via the editor. The editor can be set in *query* or *transaction* mode, which allows reading or writing to the database. For convenience, templates are offered for common tasks, like placing a publisher order or seeing an author's books.
+
+![Feature 3](images/feature3.jpg)
+
+### Contribution
+The first drafts of E/R diagram was developed by Andre and Patrick, later refined with feedback from both Pablo and Philippe. The E/R diagram was then made into a relational database by Andre and Patrick. Pablo and Philippe tested the first versions, providing insight on how to improve both the E/R diagram and the database implementation.
+
+The first versions of the web application were put up by Pablo and Philippe. Andre and Patrick worked together to improve the design. ConUShop's books are inspired from Patrick's bookshelf. Pablo's cat did all the data entry.

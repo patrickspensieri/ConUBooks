@@ -285,8 +285,8 @@
 			document.getElementById('input2').disabled = false;
 			document.getElementById('input1Label').innerHTML = 'Argument 1:';
 			document.getElementById('input2Label').innerHTML = 'Argument 2:';
-			document.getElementById('input1Label').placeholder = '';
-			document.getElementById('input2Label').placeholder = '';
+			document.getElementById('input1').placeholder = '';
+			document.getElementById('input2').placeholder = '';
 		}
 
 		function disableQueryInputs(){

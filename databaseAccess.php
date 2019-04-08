@@ -145,11 +145,14 @@ function getAllSalesByEmployeeOnDate($cid, $date)
 function getAllPurchases()
 {
     $connection = conn();
-    $results    = $connection->query("select s1.*, sum(s2.totalPrice) as 'total customer sales in 2019'
+    $results    = $connection->query("select s1.*, sb.isbn, (select sum(s2.totalPrice)
+    from sale s2
+    where s1.customerID = s2.customerID
+    and s2.date between '2019-01-01' and '2019-12-31'
+    group by customerID) as 'total customer sales in 2019'
     from sale s1
-    inner join sale s2 on s1.customerID = s2.customerID
-    where s1.date between '2019-01-01' and '2019-12-31'
-    and s2.date between '2019-01-01' and '2019-12-31';");
+    inner join sale_book sb on sb.saleID = s1.saleID
+    where s1.date between '2019-01-01' and '2019-12-31';");
     $connection = null;
     return $results;
 }
@@ -158,7 +161,7 @@ function getAllPurchases()
 function getAllBooksNotReceived()
 {
     $connection = conn();
-    $results    = $connection->query("select b.title, pb.isbn, pb.quantity, p.dateDue
+    $results    = $connection->query("select p.publisherOrderID, b.title, pb.isbn, pb.quantity, p.dateDue
     from publisherOrder p
     inner join publisherOrder_book pb on p.publisherOrderID = pb.publisherOrderID
     inner join book b on pb.isbn = b.isbn
