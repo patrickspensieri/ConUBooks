@@ -28,7 +28,7 @@ drop procedure if exists getEmployee;
 drop procedure if exists getCustomer;
 drop procedure if exists getPublisher;
 drop procedure if exists getBranch;
-
+-- enable foreign key checks
 SET FOREIGN_KEY_CHECKS = 1;
 
 create table entity(
@@ -86,25 +86,6 @@ create table branch(
     foreign key (branchID) references entity(entityID) on delete cascade
 );
 
-create table publisherOrder(
-    publisherOrderID integer auto_increment primary key,
-    employeeID integer not null,
-    publisherID integer not null,
-    datePlaced datetime default current_timestamp() not null,
-    dateDue datetime not null,
-    foreign key (employeeID) references employee(employeeID),
-    foreign key (publisherID) references publisher(publisherID)
-);
-
-create table publisherShipment(
-    publisherOrderID integer primary key,
-    employeeID integer,
-    trackingNumber varchar(50),
-    dateReceived datetime,
-    foreign key (employeeID) references employee(employeeID),
-    foreign key (publisherOrderID) references publisherOrder(publisherOrderID) on delete cascade
-);
-
 create table author_book(
     authorID integer not null,
     isbn char(13) not null,
@@ -118,15 +99,6 @@ create table book_publisher(
     publisherID integer not null,
     foreign key (isbn) references book(isbn),
     foreign key (publisherID) references publisher(publisherID)
-);
-
-create table publisherOrder_book(
-    publisherOrderID integer not null,
-    isbn char(13) not null,
-    quantity smallint default 1 not null,
-    primary key (publisherOrderID, isbn),
-    foreign key (publisherOrderID) references publisherOrder(publisherOrderID) on delete cascade,
-    foreign key (isbn) references book(isbn)
 );
 
 create table sale(
@@ -149,6 +121,34 @@ create table sale_book(
     foreign key (isbn) references book(isbn)
 );
 
+create table publisherOrder(
+    publisherOrderID integer auto_increment primary key,
+    employeeID integer not null,
+    publisherID integer not null,
+    datePlaced datetime default current_timestamp() not null,
+    dateDue datetime not null,
+    foreign key (employeeID) references employee(employeeID),
+    foreign key (publisherID) references publisher(publisherID)
+);
+
+create table publisherOrder_book(
+    publisherOrderID integer not null,
+    isbn char(13) not null,
+    quantity smallint default 1 not null,
+    primary key (publisherOrderID, isbn),
+    foreign key (publisherOrderID) references publisherOrder(publisherOrderID) on delete cascade,
+    foreign key (isbn) references book(isbn)
+);
+
+create table publisherShipment(
+    publisherOrderID integer primary key,
+    employeeID integer,
+    trackingNumber varchar(50),
+    dateReceived datetime,
+    foreign key (employeeID) references employee(employeeID),
+    foreign key (publisherOrderID) references publisherOrder(publisherOrderID) on delete cascade
+);
+
 create table customerOrder(
     customerOrderID integer auto_increment primary key,
     customerID integer not null,
@@ -158,15 +158,6 @@ create table customerOrder(
     foreign key (employeeID) references employee(employeeID)
 );
 
-create table customerShipment(
-    customerOrderID integer primary key,
-    employeeID integer,
-    trackingNumber varchar(50),
-    dateReceived datetime,
-    foreign key (employeeID) references employee(employeeID),
-    foreign key (customerOrderID) references customerOrder(customerOrderID) on delete cascade
-);
-
 create table customerOrder_book(
     customerOrderID integer not null,
     isbn char(13) not null,
@@ -174,6 +165,15 @@ create table customerOrder_book(
     primary key (customerOrderID, isbn),
     foreign key (customerOrderID) references customerOrder(customerOrderID) on delete cascade,
     foreign key (isbn) references book(isbn)
+);
+
+create table customerShipment(
+    customerOrderID integer primary key,
+    employeeID integer,
+    trackingNumber varchar(50),
+    dateReceived datetime,
+    foreign key (employeeID) references employee(employeeID),
+    foreign key (customerOrderID) references customerOrder(customerOrderID) on delete cascade
 );
 
 -- set the delimeter

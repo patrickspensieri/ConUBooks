@@ -2,7 +2,7 @@
 call insertEmployee(123456789, 'Andre', '14381111111', 'andre@conubooks.com');
 insert into address values (1, '1900  Lynden Road', 'Montreal', 'QC', 'L0B 1M0');
 call insertEmployee(987652431, 'Philippe', '14382222222', 'philippe@conubooks.com');
-insert into address values (2, '939  Nelson Street', 'Montreal', 'QC', 'P0T 2Y0');
+insert into address values (2, '939  Nelson Street', 'Montreal', 'QC', 'P0T 2Y0');
 -- customer
 call insertCustomer('Pablo', '15141111111', 'pablo@yahoo.com');
 insert into address values (3, '2774  Roach Road', 'Montreal', 'QC', 'N6E 1A9');
@@ -32,7 +32,7 @@ insert into author values (7, 'Irvine Welsh');
 -- book
 insert into book values ('9780141393049', 'Nineteen Eighty-Four', 19.84, 1, 10);
 insert into book values ('9780146000733', 'The Time Machine', 12.50, 1, 5);
-insert into book values ('9780199660179', 'I-Language: An Introduction to Linguistics as Cognitive Science', 120.45, 2, 0);
+insert into book values ('9780199660179', 'I-Language', 120.45, 2, 0);
 insert into book values ('9780141182606', 'A Clockwork Orange', 17.50, 1, 2);
 insert into book values ('9780141196305', 'Chess', 4.99, 1, 1);
 insert into book values ('9780099465898', 'Trainspotting', 21.95, 1, 2);
