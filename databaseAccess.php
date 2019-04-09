@@ -1,10 +1,11 @@
  <?php
 function conn()
 {
-    $servername = "spc353.encs.concordia.ca";
-    $dbname     = "spc353_4";
-    $username   = "spc353_4";
-    $password   = "1assword";
+    $config = require 'config.php';
+    $servername = $config['servername'];
+    $dbname     = $config['dbname'];
+    $username   = $config['username'];
+    $password   = $config['password'];
     try {
         $connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

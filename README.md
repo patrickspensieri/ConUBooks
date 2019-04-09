@@ -19,6 +19,22 @@ Everything else, including making a sale, placing publisher orders and updating 
 
 ![Feature 3](report/images/feature3.jpg)
 
+#### Requirements
+See the [project-requirements.pdf](https://github.com/patrickspensieri/ConUBooks/blob/master/requirements/project-requirements.pdf) and the [grading-scheme.pdf](https://github.com/patrickspensieri/ConUBooks/blob/master/requirements/grading-scheme.pdf) files.
+
+#### Possible Improvements
+Triggers or procedures can be used to help the employee make a sale, receive publisher shipments, or send out customer shipments. For example,
+```SQL
+CREATE PROCEDURE processPublisherShipment(
+    IN publisherOrderID integer,
+    IN employeeID integer)
+BEGIN
+    -- set the publisherShipment's dateReceived
+    -- for each book in the shipment
+    -- increase stock count by given quantity
+END //
+```
+
 ### Relational Database Schema
 The following scripts build, populate and query the database. To run any of the scripts, establish a connection and run `source /path/to/script.sql`.
 
@@ -41,19 +57,23 @@ The [data.sql](https://github.com/patrickspensieri/ConUBooks/blob/master/scripts
 #### Queries script
 The [queries.sql](https://github.com/patrickspensieri/ConUBooks/blob/master/scripts/queries.sql) script runs the five queries detailed in the handout.
 
-### Seed the database
+### Database Connection
+Create a `config.php` file given the `config.php.example` file and enter your server and database credentials.
+
+#### Seed the database
 1. Connect to ENCS server.
     - `ssh username@login.encs.concordia.ca`
-    - Enter password.
+    - enter password
 2. Login to mysql.
-    - `mysql -h spc353.encs.concordia.ca -u spc353_4 -p spc353_4`
+    - `mysql -h spc353.encs.concordia.ca -u groupName -p groupName`
+    - enter password
 3. Seed the database.
-    - `source /www/groups/s/sp_comp353_4/scripts/schema.sql`
-    - `source /www/groups/s/sp_comp353_4/scripts/data.sql`
+    - `source /www/groups/groupName/scripts/schema.sql`
+    - `source /www/groups/groupName/scripts/data.sql`
 
-#### Transfer files from local machine to workspace
+#### Transfer files from local machine to ENCS workspace
 Transfer a file
-`scp databaseAccess.php username@login.encs.concordia.ca:/www/groups/s/sp_comp353_4/`
+`scp databaseAccess.php username@login.encs.concordia.ca:/www/groups/groupName/`
 
 Transfer a folder
-`scp -r scripts/ username@login.encs.concordia.ca:/www/groups/s/sp_comp353_4/`
+`scp -r scripts/ username@login.encs.concordia.ca:/www/groups/groupName/`
